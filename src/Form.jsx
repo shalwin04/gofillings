@@ -52,8 +52,8 @@ const Form = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="accountNumber" className="block text-gray-700 font-bold mb-2">
-              Account Number
+            <label htmlFor="phNumber" className="block text-gray-700 font-bold mb-2">
+              Phone Number
             </label>
             <input
               type="text"
@@ -108,7 +108,7 @@ const Form = () => {
           )}
           <button
             type="submit"
-            className="bg-green-500 mt-5 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-full"
+            className="bg-green-500 mt-6 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-full"
           >
             Submit
           </button>
