@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+import AnalyticsAmico from "./images/Analytics-amico.png";
 import Vaultrafiki from "./images/Vault-rafiki.png";
 import YoungandHappy from "./images/Young and happy-bro.png";
 import Segmentation from "./images/Segmentation-pana.png";
@@ -9,7 +9,6 @@ import Invoice from "./images/Invoice-pana (1).png";
 import logo1 from "./images/PNG.png";
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { FaLinkedinIn } from "react-icons/fa";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Form from "./Form";
 import { useNavigate } from "react-router-dom";
@@ -30,12 +29,10 @@ return (
             alt="Logo"
             className="w-16 h-16 mr-3" // Adjust the width and height here
           />
-          <p className="text-3xl text-center font-bold text-blue-500 ">
-            <span className="text-green-500">Go</span>Filings
-          </p>
         </div>
         <div>
-          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+          onClick={handleClick}>
             Contact Us
           </button>
         </div>
@@ -46,26 +43,25 @@ return (
         <div className="flex items-center w-full max-w-screen-lg mx-auto">
           <div className="flex items-center justify-between w-full">
             <div>
-              <h1 className="text-3xl font-bold text-green-500 ">
+              <h1 className="text-3xl font-bold text-green-500 text-center">
                 Are you working somewhere?
               </h1>
               <div className="mt-6">
-                <p className="text-5xl font-bold text-blue-500">
-                  Have you filled your
-                </p>
-                <p className="text-5xl font-bold text-blue-500">
-                  Income Tax Returns?
+                <p className="text-4xl font-bold text-blue-500 text-center">
+                  Have you filled your Income Tax Returns?
                 </p>
               </div>
+              <div className="flex items-center justify-center mt-4">
               <button
                 className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
                 onClick={handleClick}
               >
                 Click here
               </button>
+              </div>
             </div>
             <img
-              src={Vaultrafiki}
+              src={AnalyticsAmico}
               alt="Logo"
               className="w-full md:w-1/2 ml-8"
             />
@@ -76,7 +72,7 @@ return (
         <div className="flex items-center w-full max-w-screen-lg mx-auto">
           <div className="flex items-center justify-between w-full">
             <div>
-              <h1 className="text-3xl text-blue-800">
+              <h1 className="text-3xl text-blue-800 text-center">
                 GoFilings is a Cloud based Accounting platform through which
                 we offer all accounting services like Filing Income Tax
                 Returns, GST Returns etc., at users convenience.
