@@ -1,59 +1,38 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import logo1 from "./images/PNG.png";
-import axios from "axios";
 import emailjs from '@emailjs/browser';
 
-
-const Form = () => {
+const Form = ({ onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [userType, setUserType] = useState("Individual");
   const [companyName, setCompanyName] = useState("");
   const [designation, setDesignation] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [showThanks, setShowThanks] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const validateForm = () => {
+    // Check if all required fields are filled
+    const isNameValid = name.trim() !== "";
+    const isEmailValid = email.trim() !== "";
+    const isPhoneNumberValid = phoneNumber.trim() !== "" && phoneNumber.length === 10; // Assuming phone number is required and must be 10 digits
+  
+    // Update form validation state based on field validity
+    setIsFormValid(isNameValid && isEmailValid && isPhoneNumberValid);
+  };
+
+  useEffect(() => {
+    validateForm();
+  }, [name, email, phoneNumber]);
+  
 
   const handleUserTypeChange = (e) => {
     setUserType(e.target.value);
   };
 
   const form = useRef();
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   // Create a data object with form values
-  //   const formData = {
-  //     name,
-  //     email,
-  //     phoneNumber,
-  //     userType,
-  //     companyName: userType === "Company" ? companyName : "",
-  //     designation: userType === "Company" ? designation : "",
-  //   };
-
-  //   // Send form data to the backend
-  //   try {
-  //     const response = await axios.post("http://localhost:4000/api/form-submit", {
-  //       // method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-  //     // const response = await axios.post("http://localhost:4000/api/form-submit", formData);
-
-  //     if (response.ok) {
-  //       console.log("Form submitted successfully!");
-  //       alert("Submitted Sucessfully");
-  //       // Optionally, reset form state here
-  //     } else {
-  //       console.error("Failed to submit form");
-  //       alert("failed to submit");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //   }
-  // };
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -65,45 +44,46 @@ const Form = () => {
       .then(
         () => {
           console.log('SUCCESS!');
-          alert("Submitted Sucessfully");
+          setSubmitted(true);
+          setShowThanks(true);
+          setTimeout(() => {
+            setShowThanks(false);
+            onClose(); // Close the form popup
+          }, 2000)
         },
         (error) => {
           console.log('FAILED...', error.text);
-          alert("Failed to submit");
         },
       );
   };
 
+  const handleClose = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    if (submitted) {
+      setShowThanks(true);
+      setTimeout(() => setShowThanks(false), 5000); // 5 seconds
+    }
+  }, [submitted]);
+
   return (
-    <div>
-      <header className="flex items-center justify-center bg-gray-800 text-white p-4">
-        <div className="flex items-center justify-between w-full max-w-screen-lg mx-auto">
-          <div className="flex items-center">
-            <img src={logo1} alt="Logo" className="w-16 h-16 mr-3" />
-            <p className="text-3xl text-center font-bold text-blue-500">
-              <span className="text-green-500">Go</span>Filings
-            </p>
-          </div>
-          <div>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
-              Contact Us
-            </button>
-          </div>
-        </div>
-      </header>
-      <div className="flex items-center justify-center w-full max-w-screen-lg mx-auto">
+    <div className="relative flex flex-col items-center justify-center h-full">
+      <img src={logo1} alt="Logo" className="w-16 h-16 mb-8" />
+      <button className="absolute top-0 right-0 m-4 z-50" onClick={handleClose} style={{ zIndex: 9999 }}>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      {!submitted && (
         <form
           onSubmit={sendEmail}
           ref={form}
           className="mt-8 max-w-md mx-auto p-6 border border-gray-300 rounded-lg"
         >
           <div className="mb-4">
-            <label
-              htmlFor="firstName"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Name*
-            </label>
+            <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">Name*</label>
             <input
               type="text"
               id="firstName"
@@ -115,12 +95,7 @@ const Form = () => {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Email Address*
-            </label>
+            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">Email Address*</label>
             <input
               type="email"
               id="email"
@@ -132,29 +107,19 @@ const Form = () => {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="phNumber"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Phone Number
-            </label>
+            <label htmlFor="phNumber" className="block text-gray-700 font-bold mb-2">Phone Number</label>
             <input
-              type="text"
+              type="tel" // Change to tel type for better mobile support
               id="phNumber"
               name="phNumber"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))} // Limit to 10 digits
               className="appearance-none border rounded-sm w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Phone Number"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="userType"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              User Type*
-            </label>
+            <label htmlFor="userType" className="block text-gray-700 font-bold mb-2">User Type*</label>
             <select
               id="userType"
               name="userType"
@@ -169,12 +134,7 @@ const Form = () => {
           {userType === "Company" && (
             <>
               <div className="mb-4">
-                <label
-                  htmlFor="companyName"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Company Name*
-                </label>
+                <label htmlFor="companyName" className="block text-gray-700 font-bold mb-2">Company Name*</label>
                 <input
                   type="text"
                   id="companyName"
@@ -186,12 +146,7 @@ const Form = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="designation"
-                  className="block text-gray-700 font-bold mb-2"
-                >
-                  Designation*
-                </label>
+                <label htmlFor="designation" className="block text-gray-700 font-bold mb-2">Designation*</label>
                 <input
                   type="text"
                   id="designation"
@@ -207,11 +162,19 @@ const Form = () => {
           <button
             type="submit"
             className="bg-green-500 mt-6 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-full"
+            disabled={!isFormValid}
           >
             Submit
           </button>
         </form>
-      </div>
+      )}
+      {submitted && (
+        <div className="text-center p-4">
+          <div className={`${showThanks ? "block" : "hidden"}`}>
+            <p className="text-xl font-bold text-green-500">Thank you for your response!</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
