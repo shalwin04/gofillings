@@ -254,7 +254,7 @@ return (
                 className="text-white hover:text-gray-400 flex items-center"
               >
                 <FaPhone className="mr-1" />
-                +123-456-7890
+                {/* +123-456-7890 */}
               </a>
             </div>
           </div>
