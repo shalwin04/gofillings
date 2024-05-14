@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom"
 import { Routes, Route } from "react-router-dom";
-import Home from "./Home";
+import Home from "./Home1";
 import Form from "./Form";
 
 const AllRoutes = () =>{
